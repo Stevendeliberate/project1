@@ -2,12 +2,16 @@ from cv2 import cv2
 import numpy as np 
 from collections import deque   #双端序列 在序列的前后都可以执行添加或者删除操作
 
+def on_EVENT_LBUTTONDOWN(event , x, y , flags , param):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        print(hsv[y,x])
+
 cap = cv2.VideoCapture(0)       #打开默认摄像头
 
 pts = deque(maxlen=64)
 
-low_hand_color = np.array([110,50,50])
-Upper_hand_color = np.array([130,255,255])
+low_hand_color = np.array([0,100,200])
+Upper_hand_color = np.array([50,220,255])
 
 while True:
     ret , img = cap.read()      #读取摄像头传入的每一帧图像到img中 是三维矩阵
@@ -15,6 +19,9 @@ while True:
     
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)   #转换格式为hsv
 
+    cv2.imshow("hsv",hsv)
+    cv2.setMouseCallback('hsv',on_EVENT_LBUTTONDOWN)
+    
     kernel = np.ones((5,5),np.uint8)
 
     mask = cv2.inRange(hsv , low_hand_color,Upper_hand_color)   #二值化图像，阈值为之前定义的hand_color
